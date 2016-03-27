@@ -1,5 +1,5 @@
 import pygame
-from math import log, atan
+from math import log, atan, exp
 
 
 class FeatureMap():
@@ -21,23 +21,20 @@ class FeatureMap():
                     array[x][y] = clr[1]
                 if mode == "b":
                     array[x][y] = clr[2]
-                if mode == "c":
-                    s = 0
-                    n = 0
-                    for i in range(max(0, x-r), min(width, x+r+1)):
-                        for j in range(max(0, y-r), min(height, y+r+1)):
-                            n += 1
-                            clr2 = img.get_at((i, j))
-                            s += sum((float(clr[i])-clr2[i])**2 for i in range(3))**0.5
-                    array[x][y] = s/n
-                    #print array[x][y]
+                if mode == 'h':
+                    array[x][y] = clr.hsva[0]
+                if mode == 's':
+                    array[x][y] = clr.hsva[1]
+                if mode == 'v':
+                    array[x][y] = clr.hsva[2]
         self.map = array
 
     def normalize(self, compress=False):
         max_point = 0
         min_point = 1000000
         if compress:
-            self.map = [[log((max(0, i-0.2))**0.1+0.1) for i in j] for j in self.map]
+            self.map = [[i**1 for i in j] for j in self.map]
+            #self.map = [[log((max(0, i-0.2))**0.1+0.1) for i in j] for j in self.map]
         for x in range(len(self.map)):
             for y in range(len(self.map[0])):
                 if max_point < self.map[x][y]:
@@ -46,7 +43,7 @@ class FeatureMap():
                     min_point = self.map[x][y]
         k = 255/float(max_point-min_point)
         self.map = [[i-min_point for i in j] for j in self.map]
-        self.map = [[int(i*k) for i in j] for j in self.map]
+        self.map = [[i*k for i in j] for j in self.map]
 
     def __add__(self, other):
         result = FeatureMap()
@@ -64,7 +61,7 @@ class FeatureMap():
         flags = pygame.DOUBLEBUF | pygame.HWSURFACE
         # screen = pygame.display.set_mode(DISPLAY)
         screen = pygame.display.set_mode(DISPLAY, flags)
-        pygame.display.set_caption("Naive Attention Model")
+        pygame.display.set_caption("Multilayer Naive Saliety")
         background = pygame.Surface(DISPLAY)
         background.fill(pygame.Color("#000000"))
         for x in range(len(self.map)):
@@ -83,7 +80,7 @@ class FeatureMap():
         flags = pygame.DOUBLEBUF | pygame.HWSURFACE
         # screen = pygame.display.set_mode(DISPLAY)
         screen = pygame.display.set_mode(DISPLAY, flags)
-        pygame.display.set_caption("Naive Attention Model")
+        pygame.display.set_caption("Multilayer Naive Saliety")
         background = pygame.Surface(DISPLAY)
         background.fill(pygame.Color("#000000"))
         for x in range(len(self.map)):

@@ -1,4 +1,9 @@
 .idea/
+
+src/tests/raw/
+
+src/results/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
