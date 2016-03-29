@@ -1,4 +1,5 @@
 from test import run_test
+import os
 
 
 def add_to_dataset(dataset, info):
@@ -16,9 +17,14 @@ def add_to_dataset(dataset, info):
 
 
 def test_formed_set(name, number, size, scale, radius, cellsize, mode, subfolder=''):
+    if subfolder:
+        try:
+            os.stat('results/'+name+subfolder)
+        except:
+            os.mkdir('results/'+name+subfolder)
     for i in range(1, number+1):
         run_test('tests/'+name+'/test'+str(i)+'.bmp', size[0], size[1], scale, radius, cellsize,
-                 save_as='results/'+name+'/test'+subfolder+str(i)+mode+'.png', status=True, mode=mode)
+                 save_as='results/'+name+subfolder+'/test'+str(i)+mode+'.png', status=True, mode=mode)
 
 
 def test_raw_set(dataset, mode):
@@ -45,3 +51,13 @@ def test_people_64x48(number, scale, radius, cellsize, mode, subfolder=''):
 
 def test_dogs_120x90(number, scale, radius, cellsize, mode, subfolder=''):
     test_formed_set('dogs', number, [120, 90], scale, radius, cellsize, mode, subfolder)
+
+def test_people_320x240(number, scale, radius, cellsize, mode, subfolder=''):
+    test_formed_set('people_big', number, [320, 240], scale, radius, cellsize, mode, subfolder)
+
+
+def try_constants(test_function, tests_number, scale, r_values, c_values, mods):
+    for radius in r_values:
+        for cell_size in c_values:
+            for mode in mods:
+                test_function(tests_number, scale, radius, cell_size, mode, subfolder='/'+mode+'-'+str(radius)+'-'+str(cell_size)+'/')

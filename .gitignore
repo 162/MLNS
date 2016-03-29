@@ -4,6 +4,8 @@ src/tests/raw/
 
 src/results/
 
+src/difference/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
